@@ -149,7 +149,7 @@ npm install
 Copy environment file:
 
 ```bash
-cp .env.example .env
+copy .env.example .env
 ```
 
 Run development server:
@@ -211,7 +211,7 @@ pip install -r requirements.txt
 Copy environment file:
 
 ```bash
-cp .env.example .env
+copy .env.example .env
 ```
 
 Update:
