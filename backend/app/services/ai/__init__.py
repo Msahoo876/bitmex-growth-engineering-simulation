@@ -1,0 +1,1 @@
+"""AI insight generation services."""
