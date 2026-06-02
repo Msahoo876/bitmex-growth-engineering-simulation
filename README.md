@@ -26,15 +26,6 @@ Track and validate:
 * Referrals
 * Campaign Activity
 
-APIs:
-
-```http
-POST /api/v1/track
-POST /api/v1/identify
-POST /api/v1/page
-POST /api/v1/events
-```
-
 ---
 
 ## Funnel Analytics
@@ -172,6 +163,12 @@ cd frontend
 npm install
 ```
 
+Copy environment file:
+
+```bash
+cp .env.example .env
+```
+
 Run development server:
 
 ```bash
@@ -237,14 +234,6 @@ cp .env.example .env
 Update:
 
 ```env
-POSTGRES_USER=growth
-POSTGRES_PASSWORD=growth_secret
-POSTGRES_DB=growth_analytics
-
-DATABASE_URL=postgresql+psycopg://growth:growth_secret@localhost:5432/growth_analytics
-
-REDIS_URL=redis://localhost:6379/0
-
 GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
@@ -384,6 +373,11 @@ Mahesh Kumar Sahoo
 
 AI/ML Engineer | Data Engineer | Backend Engineer | GenAI Engineer
 
-Portfolio:
-
+🔗 Portfolio
 https://mahesh-kumar-sahoo-l2r2hqb.gamma.site/
+
+🔗 LinkedIn
+https://www.linkedin.com/in/mahesh-sahoo-ai-data-engineer
+
+🔗 GitHub
+https://github.com/Msahoo876
