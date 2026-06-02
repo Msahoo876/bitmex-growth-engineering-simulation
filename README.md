@@ -226,6 +226,12 @@ Run migrations:
 alembic upgrade head
 ```
 
+# Generate Seed Demo Data (1000 Records)
+
+```bash
+python seed_demo_data_1000_records.py
+```
+
 Start server:
 
 ```bash
