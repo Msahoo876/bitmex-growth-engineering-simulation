@@ -130,23 +130,6 @@ Gemini AI Insights
            ↓
 PostgreSQL
 ```
-
----
-
-# Project Structure
-
-```text
-bitmex-growth-engineering-simulation/
-│
-├── backend/
-├── frontend/
-├── docs/
-├── data/
-├── infrastructure/
-├── notebooks/
-└── README.md
-```
-
 ---
 
 # Frontend Setup
@@ -358,12 +341,6 @@ Shows:
 * Growth Recommendations
 * Attribution Recommendations
 * Data Quality Recommendations
-
----
-
-# License
-
-MIT License
 
 ---
 
