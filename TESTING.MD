@@ -1,44 +1,28 @@
 # TESTING.md
 
-# BitMEX Growth Engineering Simulation - Testing Guide
+# BitMEX Growth Engineering Simulation - End-to-End Testing Guide
 
-This guide demonstrates how to interact with the Growth Engineering Analytics Platform and observe real-time changes across:
+## Prerequisites
 
-* Dashboard
-* Funnel Analytics
-* Attribution Analytics
-* Data Quality
-* AI Insights
-
----
-
-# Prerequisites
-
-Start Backend:
+Backend:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Backend URL:
-
-```text
-http://localhost:8000
-```
-
-Swagger UI:
-
-```text
-http://localhost:8000/api/v1/docs
-```
-
-Start Frontend:
+Frontend:
 
 ```bash
 npm run dev
 ```
 
-Frontend URL:
+Swagger:
+
+```text
+http://localhost:8000/api/v1/docs
+```
+
+Frontend:
 
 ```text
 http://localhost:5173
@@ -46,29 +30,30 @@ http://localhost:5173
 
 ---
 
-# Test Scenario
+# Test User Journey
 
-We will simulate a complete user journey:
+We will simulate:
 
 Landing Page
 → Signup
-→ KYC
-→ Deposit
-→ Trade
+→ KYC Started
+→ KYC Completed
+→ Deposit Started
+→ Deposit Completed
+→ Trade Opened
+→ Trade Closed
 
-and observe the analytics platform update automatically.
+Use the same userId throughout the test.
+
+```text
+mahesh_demo_001
+```
 
 ---
 
-# Step 1 - Identify User
+# Step 1 — Identify User
 
-Endpoint:
-
-```http
 POST /api/v1/identify
-```
-
-Request:
 
 ```json
 {
@@ -78,50 +63,47 @@ Request:
     "device": "Desktop",
     "source": "google",
     "campaign": "btc_launch_campaign"
-  }
+  },
+  "timestamp": "2026-06-02T10:00:00Z",
+  "messageId": "identify_001"
 }
 ```
 
-Expected Result:
+Expected:
 
 * User profile created
-* User appears in analytics datasets
+* User visible in analytics
 
 ---
 
-# Step 2 - Landing Page View
+# Step 2 — Landing Page View
 
-Endpoint:
-
-```http
 POST /api/v1/page
-```
-
-Request:
 
 ```json
 {
   "userId": "mahesh_demo_001",
-  "pageName": "Landing Page"
+  "name": "Landing Page",
+  "url": "https://bitmex-demo.com",
+  "title": "BitMEX Landing Page",
+  "properties": {
+    "source": "google"
+  },
+  "timestamp": "2026-06-02T10:01:00Z",
+  "messageId": "page_001"
 }
 ```
 
-Expected Dashboard Impact:
+Expected:
 
-* Landing Page count increases
+* Landing page count increases
 * Funnel entry count increases
 
 ---
 
-# Step 3 - User Signup
+# Step 3 — User Signup
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -130,35 +112,23 @@ Request:
   "properties": {
     "source": "google",
     "campaign": "btc_launch_campaign"
-  }
+  },
+  "timestamp": "2026-06-02T10:02:00Z",
+  "messageId": "signup_001"
 }
 ```
 
-Expected Impact:
-
-Dashboard:
+Expected:
 
 * Total Users +1
-
-Funnels:
-
-* Signup count +1
-
-Attribution:
-
-* Google source count increases
+* Signup Funnel +1
+* Google Attribution +1
 
 ---
 
-# Step 4 - KYC Started
+# Step 4 — KYC Started
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -166,31 +136,21 @@ Request:
   "event": "kyc_started",
   "properties": {
     "country": "India"
-  }
+  },
+  "timestamp": "2026-06-02T10:03:00Z",
+  "messageId": "kyc_started_001"
 }
 ```
 
-Expected Impact:
+Expected:
 
-Funnels:
-
-* KYC Started count increases
-
-Analytics:
-
-* Signup → KYC conversion updates
+* KYC Started +1
 
 ---
 
-# Step 5 - KYC Completed
+# Step 5 — KYC Completed
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -198,31 +158,21 @@ Request:
   "event": "kyc_completed",
   "properties": {
     "verification_method": "passport"
-  }
+  },
+  "timestamp": "2026-06-02T10:04:00Z",
+  "messageId": "kyc_completed_001"
 }
 ```
 
-Expected Impact:
+Expected:
 
-Funnels:
-
-* KYC Completion increases
-
-AI Insights:
-
-* Funnel health metrics update
+* KYC Completed +1
 
 ---
 
-# Step 6 - Deposit Started
+# Step 6 — Deposit Started
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -230,31 +180,21 @@ Request:
   "event": "deposit_started",
   "properties": {
     "currency": "USDT"
-  }
+  },
+  "timestamp": "2026-06-02T10:05:00Z",
+  "messageId": "deposit_started_001"
 }
 ```
 
-Expected Impact:
+Expected:
 
-Funnels:
-
-* Deposit Started increases
-
-Analytics:
-
-* KYC → Deposit conversion updates
+* Deposit Started +1
 
 ---
 
-# Step 7 - Deposit Completed
+# Step 7 — Deposit Completed
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -263,35 +203,22 @@ Request:
   "properties": {
     "currency": "USDT",
     "amount": 1000
-  }
+  },
+  "timestamp": "2026-06-02T10:06:00Z",
+  "messageId": "deposit_completed_001"
 }
 ```
 
-Expected Impact:
-
-Dashboard:
+Expected:
 
 * Revenue increases
-
-Funnels:
-
-* Deposit Completion increases
-
-Attribution:
-
-* Deposit attribution metrics update
+* Deposit Conversion increases
 
 ---
 
-# Step 8 - Trade Opened
+# Step 8 — Trade Opened
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -301,40 +228,22 @@ Request:
     "symbol": "BTCUSDT",
     "amount": 1000,
     "leverage": 10
-  }
+  },
+  "timestamp": "2026-06-02T10:07:00Z",
+  "messageId": "trade_opened_001"
 }
 ```
 
-Expected Impact:
-
-Dashboard:
+Expected:
 
 * Active Traders +1
-* Revenue updates
-
-Funnels:
-
-* Trade Completion increases
-
-Analytics:
-
-* Signup → Trade conversion updates
-
-Attribution:
-
-* Google conversion performance improves
+* Trade Funnel +1
 
 ---
 
-# Step 9 - Trade Closed
+# Step 9 — Trade Closed
 
-Endpoint:
-
-```http
 POST /api/v1/track
-```
-
-Request:
 
 ```json
 {
@@ -343,25 +252,24 @@ Request:
   "properties": {
     "symbol": "BTCUSDT",
     "profit": 250
-  }
+  },
+  "timestamp": "2026-06-02T10:08:00Z",
+  "messageId": "trade_closed_001"
 }
 ```
 
-Expected Impact:
+Expected:
 
-Analytics:
-
-* Trading activity increases
-
-Dashboard:
-
-* Revenue metrics update
+* Trading Metrics Update
+* Revenue Metrics Update
 
 ---
 
 # Attribution Testing
 
-Test Telegram Attribution
+## Telegram Campaign
+
+POST /api/v1/track
 
 ```json
 {
@@ -369,20 +277,24 @@ Test Telegram Attribution
   "event": "user_signed_up",
   "properties": {
     "source": "telegram",
-    "campaign": "telegram_trader_community"
-  }
+    "campaign": "telegram_trader_community",
+    "deep_link": "telegram://bitmex/invite"
+  },
+  "timestamp": "2026-06-02T11:00:00Z",
+  "messageId": "telegram_signup_001"
 }
 ```
 
-Expected Result:
+Expected:
 
-Attribution Dashboard:
-
-* Telegram source count increases
+* Telegram Attribution increases
+* Deep Link Attribution increases
 
 ---
 
-# Referral Testing
+## Referral Signup
+
+POST /api/v1/track
 
 ```json
 {
@@ -390,128 +302,124 @@ Attribution Dashboard:
   "event": "user_signed_up",
   "properties": {
     "source": "referral",
-    "referralCode": "TRADER100"
-  }
+    "referral_code": "TRADER100"
+  },
+  "timestamp": "2026-06-02T11:10:00Z",
+  "messageId": "referral_signup_001"
 }
 ```
 
-Expected Result:
+Expected:
 
-Referral metrics increase.
+* Referral Attribution increases
 
 ---
 
-# Data Quality Testing
+# Duplicate Event Test
 
-Duplicate Event Test
+Submit this request twice.
 
-Send the same request twice:
+POST /api/v1/track
 
 ```json
 {
-  "messageId": "duplicate_test_001",
   "userId": "mahesh_demo_001",
   "event": "trade_opened",
   "properties": {
     "symbol": "BTCUSDT"
-  }
+  },
+  "timestamp": "2026-06-02T12:00:00Z",
+  "messageId": "duplicate_test_001"
 }
 ```
 
-Expected Result:
+Expected:
 
-Data Quality Dashboard:
+* Duplicate Detection increases
 
-* Duplicate count increases
-
----
-
-# AI Insights Testing
-
-Generate fresh insights:
-
-Endpoint:
+Check:
 
 ```http
+GET /api/v1/quality/duplicates
+```
+
+---
+
+# Generate AI Insights
+
 POST /api/v1/insights/generate
+
+```json
+{
+  "insight_types": [
+    "executive",
+    "funnel",
+    "attribution",
+    "quality",
+    "recommendations"
+  ],
+  "persist": true
+}
 ```
 
-Expected Result:
+Expected:
 
-AI Insights page updates with:
-
-* Executive Summary
-* Funnel Recommendations
-* Attribution Recommendations
-* Data Quality Recommendations
+* Executive Summary Generated
+* Recommendations Generated
 
 ---
 
-# Verification Checklist
+# Verify Analytics
 
-Dashboard
+Open:
 
-✓ Total Users updates
+```http
+GET /api/v1/analytics/funnel
+GET /api/v1/analytics/conversion
+GET /api/v1/analytics/dropoff
+GET /api/v1/analytics/retention
+GET /api/v1/analytics/cohorts
+```
 
-✓ Active Users updates
+Expected:
 
-✓ Active Traders updates
-
-✓ Revenue updates
-
-✓ Health Score visible
-
-Funnels
-
-✓ Landing Page
-
-✓ Signup
-
-✓ KYC
-
-✓ Deposit
-
-✓ Trade
-
-Attribution
-
-✓ Google attribution
-
-✓ Telegram attribution
-
-✓ Referral attribution
-
-Data Quality
-
-✓ Duplicate detection
-
-✓ Anomaly detection
-
-✓ Health score
-
-AI Insights
-
-✓ Executive summary
-
-✓ Growth recommendations
-
-✓ Attribution recommendations
-
-✓ Data quality recommendations
+* Funnel populated
+* Conversion rates calculated
+* Dropoff visible
 
 ---
 
-# Success Criteria
+# Verify Attribution
 
-The platform is functioning correctly if:
+Open:
 
-1. Events are accepted by the Track API.
-2. Funnel metrics update.
-3. Attribution metrics update.
-4. Dashboard KPIs change.
-5. AI insights can be regenerated.
-6. Data Quality metrics detect issues.
-7. All pages display updated information without errors.
-
+```http
+GET /api/v1/attribution/sources
+GET /api/v1/attribution/campaigns
+GET /api/v1/attribution/top-source
+GET /api/v1/attribution/deep-links
+GET /api/v1/attribution/referrals
 ```
-```
+
+Expected:
+
+* Google Attribution
+* Telegram Attribution
+* Referral Attribution
+
+---
+
+# Verify Dashboard
+
+Refresh Frontend
+
+Expected:
+
+* Total Users updated
+* Active Users updated
+* Active Traders updated
+* Revenue updated
+* Top Source updated
+* AI Insights visible
+
+If all sections update successfully, the platform is functioning correctly end-to-end.
