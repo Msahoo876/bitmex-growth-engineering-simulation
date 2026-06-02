@@ -300,6 +300,8 @@ Infrastructure
 
 Displays:
 
+![Dashboard](screenshots/dashboard.png)
+
 * Total Users
 * Active Users
 * Active Traders
@@ -311,6 +313,8 @@ Displays:
 
 Shows:
 
+![Funnel](screenshots/funnel.png)
+
 * Landing → Signup → KYC → Deposit → Trade
 * Conversion Rates
 * Dropoff Metrics
@@ -318,6 +322,8 @@ Shows:
 ## Attribution Analytics
 
 Shows:
+
+![Attribution](screenshots/attribution.png)
 
 * Source Performance
 * Campaign Performance
@@ -328,6 +334,8 @@ Shows:
 
 Shows:
 
+![Data Quality](screenshots/quality.png)
+
 * Health Score
 * Duplicates
 * Anomalies
@@ -336,6 +344,8 @@ Shows:
 ## AI Insights
 
 Shows:
+
+![AI Insights](screenshots/ai.png)
 
 * Executive Summaries
 * Growth Recommendations
